@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUsername } from './components/redux/userSlice.js';
- import { loadGameState } from './components/redux/gameSlice.js';
+ // import { loadGameState } from './components/redux/gameSlice.js';
 import Game from './components/Game';
 import Leaderboard from './components/Leaderboard';
 import "./App.css";
