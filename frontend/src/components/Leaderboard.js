@@ -13,7 +13,7 @@ const Leaderboard = () => {
 
     fetchLeaderboard();
     // Set up a WebSocket connection for real-time updates
-    const ws = new WebSocket('ws://localhost:8080/ws');
+    const ws = new WebSocket('https://exploading-kittens-game.netlify.app/');
     ws.onmessage = (event) => {
       setLeaderboard(JSON.parse(event.data));
     };
