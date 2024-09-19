@@ -75,8 +75,8 @@ const Game = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch leaderboard");
       }
-      const data = await response.json();
-      setLeaderboard(data);
+      // const data = await response.json();
+      // setLeaderboard(data);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     }
