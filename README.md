@@ -27,6 +27,13 @@
 </p>
 
 <h4 >Deployed On:</h4>
+
+<ul>
+
+   <li> - Netlify </li>
+   <li>Vercel</li>
+ 
+</ul>
 <p>
   - Netlify
   - Vercel
