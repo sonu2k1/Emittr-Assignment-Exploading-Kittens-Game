@@ -26,8 +26,8 @@
     
 </p>
 
-<p>
 <h4 >Deployed On:</h4>
+<p>
   - Netlify
   - Vercel
 </p>
@@ -71,17 +71,7 @@ This project was built using Tailwind css , React, Redux , ChakraUI Node JS, Exp
 The project repository can be found in [GitHub link](https://github.com/sonu2k1/Emittr-Assignment-Exploading-Kittens-Game) or just clone the project using this command. 
 
 
-```
-Using HTTPS
 
-# git clone  https://github.com/Deepeshgodhwani/Exploding-kittens.git
-```
-
-+ Open terminal on your workspace with
-
-```
-cd /home/workspace/Exploding-kitten
-```
 
 
 ## Install
@@ -98,11 +88,11 @@ To confirm that you have npm installed you can run this command in your terminal
 npm -v
 ```
 
-To confirm that you have MongoDB installed you can run this command in your terminal:
+To confirm that you have Redis installed you can run this command in your terminal:
 
 
 ```
-redis -v
+redis-server --v
 ```
 
 
