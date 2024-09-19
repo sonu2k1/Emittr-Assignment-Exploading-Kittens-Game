@@ -30,14 +30,11 @@
 
 <ul>
 
-   <li> - Netlify </li>
+   <li> Netlify </li>
    <li>Vercel</li>
  
 </ul>
-<p>
-  - Netlify
-  - Vercel
-</p>
+
 
 
 
