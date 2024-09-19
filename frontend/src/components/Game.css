@@ -1,0 +1,13 @@
+#catcard{
+    height: 1px;
+    width: 1px;
+}
+#start{
+    color: red;
+}
+#cards{
+    size: 10px;
+    height: 10px;
+    width: 10px;
+   
+}
