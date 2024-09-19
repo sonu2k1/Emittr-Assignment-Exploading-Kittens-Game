@@ -22,7 +22,7 @@ const Game = () => {
   );
   const { username } = useSelector((state) => state.user);
   const lastDrawnCardNames = useSelector(selectDrawnCardNames);
-  const [leaderboard, setLeaderboard] = useState([]);
+  // const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     dispatch(saveGameState());
