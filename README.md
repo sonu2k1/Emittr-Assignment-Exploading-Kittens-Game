@@ -3,9 +3,9 @@
 <h3 align="center">It's an action-packed singleplayer card game</h3>
 
 
-<h4 align="center">Frontend:</h4>
+<h4>Frontend:</h4>
 
-<p align="center">
+<p >
 
  - React
  - Redux
@@ -16,9 +16,9 @@
 </p>
 
 
-<h4 align="center">Backend:</h4>
+<h4>Backend:</h4>
 
-<p align="center">
+<p>
 
 - Go Lang
 - Redis
@@ -27,7 +27,7 @@
 </p>
 
 <p>
-<h4 align="center">Deployed On:</h4>
+<h4 >Deployed On:</h4>
   - Netlify
   - Vercel
 </p>
@@ -144,7 +144,7 @@ go run main.go
 
 If you want to contact me, you can reach me through below handles.
 
-[![linkedin](https://img.shields.io/badge/Deepesh_Godhwani-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sonu-singh-429a86291)
-[![Twitter](https://img.shields.io/badge/Deepesh_Godhwani-20232A?style=for-the-badge&logo=Github&logoColor=white)](https://github.com/sonu2k1)
+[![linkedin](https://img.shields.io/badge/Sonu_Singh-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sonu-singh-429a86291)
+[![Twitter](https://img.shields.io/badge/Sonu_Singh-20232A?style=for-the-badge&logo=Github&logoColor=white)](https://github.com/sonu2k1)
 
 © 2024 Sonu Singh
