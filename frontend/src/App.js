@@ -38,9 +38,9 @@ const App = () => {
           <label for='user' className="form-label" style={{color:"red"}} >Enter Your Name:</label>
           <input
           id='user'
-          className="form-control "
+          className="form-control align-middle "
             type="text"
-            value={tempUsername}
+            value={tempUsername }
             onChange={(e) => setTempUsername(e.target.value)}
             placeholder="Enter username"
           />
