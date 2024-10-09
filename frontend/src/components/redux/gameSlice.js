@@ -42,7 +42,7 @@ export const gameSlice = createSlice({
           state.defuseCards += 1;
           break;
         case '🔀':
-          state.deck = ['😼', '🙅‍♂️', '🔀', '💣'].sort(() => Math.random() - 0.5);
+          state.deck = ['😼', '🙅‍♂️', '🔀', '💣'].sort(() => Math.random() - 0.5);   // Math.floor(Math.random() * 4)
           break;
         case '💣':
           if (state.defuseCards > 0) {

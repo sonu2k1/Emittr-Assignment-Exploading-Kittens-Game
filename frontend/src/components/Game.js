@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   startGame,
@@ -22,7 +22,6 @@ const Game = () => {
   );
   const { username } = useSelector((state) => state.user);
   const lastDrawnCardNames = useSelector(selectDrawnCardNames);
-  // const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     dispatch(saveGameState());
@@ -63,7 +62,7 @@ const Game = () => {
       if (!response.ok) {
         throw new Error("Failed to update points");
       }
-      fetchLeaderboard(); // Refresh leaderboard after updating points
+      fetchLeaderboard();
     } catch (error) {
       console.error("Error updating points:", error);
     }
@@ -75,13 +74,27 @@ const Game = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch leaderboard");
       }
-      // const data = await response.json();
-      // setLeaderboard(data);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     }
   };
 
+  const getCardImage = (cardName) => {
+    switch (cardName) {
+      case "Cat Card":
+        return catImage;
+      case "Defuse Card":
+        return defuseImage;
+      case "Shuffle Card":
+        return shuffleImage;
+      case "Exploding Kitten":
+        return bombImage;
+      default:
+        console.warn(`No image found for card: ${cardName}`);
+        return null;
+    }
+  };
+  
   return (
     <div id="start">
       <h2>Welcome, {username}!</h2>
@@ -103,20 +116,30 @@ const Game = () => {
           >
             Draw Card
           </button>
-          <h3>Drawn Cards:</h3>
-          <ul className="list-group list-group-numbered">
-            {lastDrawnCardNames.map((cardName, index) => (
-              <li
-                className="list-group-item"
-                style={{ color: "red" }}
-                key={index}
-              >
-                {cardName}
-              </li>
-            ))}
-          </ul>
           {gameStatus === "won" && <p>You won!</p>}
           {gameStatus === "lost" && <p>You lost!</p>}
+          <h3>Drawn Cards:</h3>
+          <div className="drawn-cards">
+            {lastDrawnCardNames.map((cardName, index) => {
+              const cardImage = getCardImage(cardName);
+              return (
+                <div class="card " id="drawn-card" style={{ width: "15rem" }}>
+                <div key={index} className="drawn-card">
+                  {cardImage ? (
+                    <img
+                      src={cardImage}
+                      alt={cardName}
+                      className="card-img"
+                    />
+                  ) : (
+                    <div className="card-placeholder">{cardName}</div>
+                  )}
+                </div>
+                </div>
+              );
+            })}
+          </div>
+          
         </>
       )}
       <div className="mt-3 mb-3">
@@ -124,21 +147,7 @@ const Game = () => {
           Reset
         </button>
       </div>
-      {/* Cards */}
-      <div className="d-flex justify-content-center ml-5 mb-3">
-        <div className="card" style={{ width: "18rem" }}>
-          <img src={catImage} className="card-img-top" alt="Cat Card" />
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <img src={defuseImage} className="card-img-top" alt="Defuse Card" />
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <img src={bombImage} className="card-img-top" alt="Bomb Card" />
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <img src={shuffleImage} className="card-img-top" alt="Shuffle Card" />
-        </div>
-      </div>
+    
 
       <Rules />
     </div>

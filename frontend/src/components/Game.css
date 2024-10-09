@@ -11,3 +11,58 @@
     width: 10px;
    
 }
+
+
+.drawn-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  /* .drawn-card {
+    width: 100px;
+    height: 140px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .card-placeholder {
+    text-align: center;
+    padding: 10px;
+  } */
+
+  #drawn-card{
+    margin-left: 100px;
+  }
+
+  
+
+  @keyframes myAnimation{
+    0%{
+      opacity: 1;
+      /* transform: rotateX(0deg); */
+    }
+    50%{
+      opacity: 1;
+      /* transform: rotateX(0deg); */
+    }
+    100%{
+      display: none;
+      opacity: 0;
+      /* transform: rotateX(90deg); */
+    }
+  }
+  
+  #drawn-card{
+      animation-name: myAnimation;
+      animation-duration: 2000ms;
+      animation-fill-mode: forwards;
+  }
