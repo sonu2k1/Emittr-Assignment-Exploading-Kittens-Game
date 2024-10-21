@@ -6,6 +6,9 @@ import Leaderboard from './components/Leaderboard';
 import "./App.css";
 
 const App = () => {
+
+  
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [tempUsername, setTempUsername] = useState('');
   const [error, setError] = useState('');
@@ -44,7 +47,12 @@ const App = () => {
   };
 
   return (
+
+  
+
     <div className='text-center mt-5 mb-5'>
+
+
       <h1 id='heading' style={{ textDecorationLine: 'underline' }} className="shadow-lg p-3 mb-5 bg-body-tertiary rounded">Exploding Kittens Game</h1>
   
       {!loggedIn ? (
@@ -70,7 +78,9 @@ const App = () => {
       ) : (
         <>
           <Game />
-          <Leaderboard />
+          <hr />
+          
+          
         </>
       )}
     </div>

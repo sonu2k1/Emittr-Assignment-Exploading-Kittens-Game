@@ -7,24 +7,13 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"sync"
 	"time"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 )
 
-var (
-	rdb        *redis.Client
-	upgrader   = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	}
-	clients    = make(map[*websocket.Conn]bool)
-	clientsMux sync.Mutex
-)
+var rdb *redis.Client
 
 type User struct {
 	Username string `json:"username"`
@@ -34,8 +23,8 @@ type User struct {
 func main() {
 	// Initialize Redis client with longer timeout
 	rdb = redis.NewClient(&redis.Options{
-		Addr:        "redis-10976.c274.us-east-1-3.ec2.redns.redis-cloud.com:10976",
-		Password:    "rbEutjkbLN3h07KAPkaWXtVZ3VQxS9Ko",
+		Addr:        "redis-14571.c73.us-east-1-2.ec2.redns.redis-cloud.com:14571",
+		Password:    "z544nd1JnUSQWvGmwfOS6LB5rLUuVm7g",
 		DB:          0,
 		DialTimeout: 10 * time.Second,
 	})
@@ -60,13 +49,23 @@ func main() {
 	log.Println("Successfully connected to Redis")
 
 	r := mux.NewRouter()
+
+	// Add CORS middleware
+	r.Use(corsMiddleware)
+
+	// Add routes with leading slashes
+	r.HandleFunc("/", homeHandler).Methods("GET")
 	r.HandleFunc("/api/leaderboard", getLeaderboard).Methods("GET")
 	r.HandleFunc("/api/incrementPoints", incrementPoints).Methods("POST")
-	r.HandleFunc("/ws", handleWebSocket)
+
+	// Add OPTIONS method handling for CORS preflight requests
+	r.Methods("OPTIONS").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "9000"
 	}
 
 	server := &http.Server{
@@ -80,8 +79,53 @@ func main() {
 	}
 }
 
+// CORS middleware
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+// Home handler for root route
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"status": "Server is running",
+		"routes": "/api/leaderboard, /api/incrementPoints",
+	})
+}
+
 func getLeaderboard(w http.ResponseWriter, r *http.Request) {
-	leaderboard := getLeaderboardData()
+	ctx := r.Context()
+	users, err := rdb.HGetAll(ctx, "users").Result()
+	if err != nil {
+		log.Printf("Error fetching leaderboard data: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	var leaderboard []User
+	for username, points := range users {
+		pointsInt := 0
+		if err := json.Unmarshal([]byte(points), &pointsInt); err != nil {
+			log.Printf("Error unmarshaling points for user %s: %v", username, err)
+			continue
+		}
+		leaderboard = append(leaderboard, User{Username: username, Points: pointsInt})
+	}
+
+	sort.Slice(leaderboard, func(i, j int) bool {
+		return leaderboard[i].Points > leaderboard[j].Points
+	})
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(leaderboard); err != nil {
@@ -107,45 +151,13 @@ func incrementPoints(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("Incremented points for %s. New total: %d", user.Username, points)
-
-	broadcastLeaderboard()
-
-	w.WriteHeader(http.StatusOK)
-}
-
-func handleWebSocket(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Printf("Error upgrading to WebSocket: %v", err)
-		return
-	}
-
-	clientsMux.Lock()
-	clients[conn] = true
-	clientsMux.Unlock()
-
-	defer func() {
-		clientsMux.Lock()
-		delete(clients, conn)
-		clientsMux.Unlock()
-		conn.Close()
-	}()
-
-	for {
-		_, _, err := conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("WebSocket error: %v", err)
-			}
-			break
-		}
-
-		leaderboard := getLeaderboardData()
-		if err := conn.WriteJSON(leaderboard); err != nil {
-			log.Printf("Error sending leaderboard to client: %v", err)
-			break
-		}
-	}
+	
+	// Return the updated points in the response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"username": user.Username,
+		"points":   points,
+	})
 }
 
 func getLeaderboardData() []User {
@@ -171,19 +183,4 @@ func getLeaderboardData() []User {
 	})
 
 	return leaderboard
-}
-
-func broadcastLeaderboard() {
-	leaderboard := getLeaderboardData()
-	clientsMux.Lock()
-	defer clientsMux.Unlock()
-
-	for client := range clients {
-		err := client.WriteJSON(leaderboard)
-		if err != nil {
-			log.Printf("Error broadcasting to client: %v", err)
-			client.Close()
-			delete(clients, client)
-		}
-	}
 }

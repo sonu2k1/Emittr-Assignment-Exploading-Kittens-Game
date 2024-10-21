@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Leaderboard from "./Leaderboard.js";
 import { useSelector, useDispatch } from "react-redux";
 import {
   startGame,
@@ -14,6 +15,8 @@ import bombImage from "../assets/img/explodeCard.png";
 import Rules from "./Rules.js";
 import "./Game.css";
 import { saveGameState } from "./redux/action.js";
+
+const endpoint = "http://localhost:9000";
 
 const Game = () => {
   const dispatch = useDispatch();
@@ -52,7 +55,7 @@ const Game = () => {
 
   const updateUserPoints = async () => {
     try {
-      const response = await fetch("/api/incrementPoints", {
+      const response = await fetch(`${endpoint}/api/incrementPoints`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +73,7 @@ const Game = () => {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await fetch("/api/leaderboard");
+      const response = await fetch(`${endpoint}/api/leaderboard`);
       if (!response.ok) {
         throw new Error("Failed to fetch leaderboard");
       }
@@ -96,7 +99,13 @@ const Game = () => {
   };
   
   return (
+
+  
+
     <div id="start">
+
+
+
       <h2>Welcome, {username}!</h2>
       {!isGameStarted ? (
         <button className="btn btn-danger" onClick={handleStartGame}>
@@ -150,6 +159,33 @@ const Game = () => {
     
 
       <Rules />
+
+<hr />
+      
+    {/* <!-- Button trigger Leaderboard --> */}
+<button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Leaderboard
+</button>
+
+{/* <!-- Modal --> */}
+<div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div className="modal-body">
+      <Leaderboard />
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };
